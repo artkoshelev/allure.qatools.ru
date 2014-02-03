@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+
+
+
+
+    
+    
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link href="http://fonts.googleapis.com/css?family=Exo+2:700|Open+Sans:400italic,400&subset=latin,cyrillic" rel="stylesheet" type="text/css">
+    <title>Allure Karma integration</title>
+    <meta name="viewport" content="width=device-width">
+
+    <link  href="//yandex.st/bootstrap/3.0.2/css/bootstrap.min.css" rel="stylesheet">
+    <link  href="//fotorama.s3.amazonaws.com/4.4.8/fotorama.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/syntax.css">
+    <link rel="stylesheet" href="/css/main.css">
+
+    <script src="//yandex.st/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//fotorama.s3.amazonaws.com/4.4.8/fotorama.js"></script>
+</head>
+<body>
+
+<header class="header">
+    <div class="container">
+        <h1 class="title"><a href="/ru/">Allure Framework</a></h1>
+        <ul class="menu">
+            <li><a class="menu__title" href="/ru/">Главная</a></li>
+            
+            
+            <li class="menu__menu java">
+                
+                <span class="menu__title">java</span>
+                <ul class="dropdown">
+                
+                    <li class="dropdown__item"><a href="/ru/langs/java/junit.html">junit</a></li>
+                
+                    <li class="dropdown__item"><a href="/ru/langs/java/testng.html">testng</a></li>
+                
+                </ul>
+            </li>
+            
+            <li class="menu__menu javascript">
+                
+                <span class="menu__title">javascript</span>
+                <ul class="dropdown">
+                
+                    <li class="dropdown__item"><a href="/ru/langs/javascript/karma.html">karma</a></li>
+                
+                </ul>
+            </li>
+            
+            <li class="menu__menu python">
+                
+                <span class="menu__title">python</span>
+                <ul class="dropdown">
+                
+                    <li class="dropdown__item"><a href="/ru/langs/python/pytest.html">pytest</a></li>
+                
+                </ul>
+            </li>
+            
+            <li>
+                
+                    <a class="menu__title" href="/">English Version</a>
+                
+            </li>
+        </ul>
+        <div class="pull-right">
+            <a class="qatools" href="http://qatools.ru"></a>
+        </div>
+    </div>
+</header>
+<div class="page content container">
+<h1>karma-allure-reporter</h1>
+
+<p>Репортер о тестах, запускаемых через Karma в Allure XML формате. Этот отчет дает больше информации.</p>
+
+<h2>Установка</h2>
+
+<p>Добавьте karma-allure-reporter в зависимости своего проекта</p>
+<div class="highlight"><pre><code class="json language-json" data-lang="json"><span class="p">{</span>
+  <span class="nt">&quot;devDependencies&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;karma&quot;</span><span class="p">:</span> <span class="s2">&quot;~0.10&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;karma-allure-reporter&quot;</span><span class="p">:</span> <span class="s2">&quot;~1.0.0&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Можно сделать это консольной командой:</p>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">npm install karma-allure-reporter --save-dev
+</code></pre></div>
+<h2>Настройка</h2>
+
+<p>Добавьте allure в секцию <code>reporters</code> своего karma.conf.js.
+Allure-reporter имеет одну настройку <code>reportDir</code> &mdash; это расположение полученных Allure XML. По умолчанию, файлы
+сохранятся прямо в основную директорию проекта.</p>
+<div class="highlight"><pre><code class="js language-js" data-lang="js"><span class="c1">// karma.conf.js</span>
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">config</span><span class="p">.</span><span class="nx">set</span><span class="p">({</span>
+    <span class="nx">reporters</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;progress&#39;</span><span class="p">,</span> <span class="s1">&#39;allure&#39;</span><span class="p">],</span>
+
+    <span class="c1">// the default configuration</span>
+    <span class="nx">allureReport</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">reportDir</span><span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>Также вы можете добавить Allure через аргументы запуска karma в консоли:
+<code>bash
+karma start --reporters allure,dots
+</code></p>
+
+<h2>API</h2>
+
+<p>Allure дает вам несколько дополнительных функций для сбора большей информации о тестах. Все функции доступны через
+глобальный объект <code>allure</code>.</p>
+
+<ul>
+<li><code>description(description)</code> добавить описание текущему выполняемому тесту</li>
+<li><p><code>severity(severity)</code> присвоить важность (severity) текущему тесту. Это может быть одно из перечисленных значений,
+например <code>allure.severity.BLOCKER</code>. Все важности по мере их уменьшения:</p>
+
+<ul>
+<li>BLOCKER</li>
+<li>CRITICAL</li>
+<li>NORMAL</li>
+<li>MINOR</li>
+<li>TRIVIAL</li>
+</ul></li>
+<li><p><code>createStep(name, stepFunction)</code> создает шаг (step). Заставляет функцию фиксировать в отчете каждый
+свой вызов. Функции могут вызываться внутри друг друга и в остчете будет дерево этих вызовов.Это самая полезная
+функция Allure, потому что позволяет составить подробный отчет с результатом выполнения каждого шага теста.</p></li>
+</ul>
+
+<p>В <a href="https://github.com/allure-framework/allure/blob/master/docs/dictionary.md">документации</a> основного проекта рассказано больше об этих функциях и их использовании.</p>
+
+<h2>Пример</h2>
+
+<p>Есть <a href="https://github.com/allure-framework/allure-karma-example">пример проекта</a>, в котором можно увидеть все вышеописанное в действии.</p>
+
+<hr>
+
+<p>Больше информации об Allure можно узнать на странице <a href="https://github.com/allure-framework/allure">Allure-core</a></p>
+
+<p>Про Karma можно узнать больше на их <a href="http://karma-runner.github.com">странице проекта</a></p>
+
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <span>
+            <span class="contact">Allure Framework</span>
+            <span class="contact">
+                <a href="https://github.com/allure-framework">GitHub</a>
+            </span>
+            <span class="contact"><a href="mailto:allure@yandex-team.ru">allure@yandex-team.ru</a></span>
+        </span>
+        <div class="strut"></div>
+    </div>
+</footer>
+
+</body>
+</html>
